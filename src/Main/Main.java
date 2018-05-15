@@ -2,15 +2,14 @@ package Main;
 
 import DatabaseSimulation.StaticDatabase;
 import Exception.WrongFormatInput;
-import Interfaces.StockSimpleService;
+import Interfaces.*;
 import Model.Stock;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Main {
+
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static ArrayList<Stock> stocks = StaticDatabase.createDatabase();
 
@@ -28,13 +27,10 @@ public class Main {
             if (option != 0) {
                 switch (option) {
                     case 1:
-                        recordTrade();
+                        startTradeSimulation();
                         break;
                     case 2:
-                        calculateGBCE();
-                        break;
-                    case 3:
-                        System.out.println("\n Goodbye! To play again, run the program");
+                        System.out.println("\nGoodbye! To play again, run the program");
                         exit = true;
                         break;
                     default:
@@ -46,13 +42,12 @@ public class Main {
     }
 
     private static void printMenu() {
-        System.out.println("\n\n Welcome to Super Simple Stock, please choose one option entering 1,2 or 3 accordingly. \n");
-        System.out.println("1 - Record a trade.");
-        System.out.println("2 - Calculate the GBCE.");
-        System.out.println("3 - Exit \n");
+        System.out.println("\n Welcome to Super Simple Stock, please choose one option entering 1 or 2. \n");
+        System.out.println("1 - Record a trade and Calculate the GBCE for all stocks.");
+        System.out.println("2 - Exit \n");
     }
 
-    private static void recordTrade() throws IOException {
+    private static void startTradeSimulation() throws IOException {
         for (Stock stock : stocks) {
             try {
                 System.out.println("\nStock Symbol " + stock.getStockSymbol() + ": ");
@@ -64,13 +59,12 @@ public class Main {
                 e.printStackTrace();
             }
         }
-        StockSimpleService.calculateDividendYield(stocks);
+        System.out.println("\n");
+        StockService stockService = new StockService();
+        stockService.calculateDividendYield(stocks);
+        stockService.calculatePERatio(stocks);
+        TradeService tradeService = new TradeService();
+        tradeService.recordTrade(stocks);
     }
-
-    private static void calculateGBCE() {
-
-
-    }
-
 
 }
