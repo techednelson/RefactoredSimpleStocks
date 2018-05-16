@@ -6,22 +6,26 @@ import java.util.ArrayList;
 
 public class StaticDatabase {
 
-    public static ArrayList<Stock> createDatabase() {
-        ArrayList<Stock> stocks;
-        stocks = new ArrayList<Stock>();
+    private static ArrayList<Stock> stocksDB = new ArrayList<>();
+
+    public static ArrayList<Stock> getStocksDB() { return stocksDB; }
+
+    public static void setStocksDB(ArrayList<Stock> stocksDB) { StaticDatabase.stocksDB = stocksDB; }
+
+    public static void createDatabase() {
         Stock Tea = new Stock("TEA", "Common", 0, 0, 100);
-        stocks.add(Tea);
+        stocksDB.add(Tea);
         Stock Pop = new Stock("Pop", "Common", 8, 0, 100);
-        stocks.add(Pop);
+        stocksDB.add(Pop);
         Stock Ale = new Stock("Ale", "Common", 23, 0, 60);
-        stocks.add(Ale);
+        stocksDB.add(Ale);
         Stock Gin = new Stock("Gin", "Preferred", 8, 2, 100);
-        stocks.add(Gin);
+        stocksDB.add(Gin);
         Stock Joe = new Stock("Joe", "Common", 13, 0, 250);
-        stocks.add(Joe);
+        stocksDB.add(Joe);
 
         System.out.println("Stock Symbol     Type     Last Dividend     Fixed Dividend     Par Value\n");
-        for (Stock stock : stocks) {
+        for (Stock stock : stocksDB) {
             if(stock.getLastDividend() > 9) {
                 System.out.println("\t" + stock.getStockSymbol() + "         " + stock.getType() + "           " + stock
                          .getLastDividend()
@@ -36,7 +40,6 @@ public class StaticDatabase {
                          + "                " + stock.getFixedDividend() + "           " + stock.getParValue() +  "\n");
             }
         }
-        return stocks;
     }
 
 }
