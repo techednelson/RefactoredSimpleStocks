@@ -1,32 +1,31 @@
 package Interfaces;
 
-import Model.Stock;
-import Model.Trade;
+import DatabaseSimulation.StaticDatabase;
+import Model.*;
 
 import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class TradeService implements SimpleStockServices {
+public class SimpleTradeService implements TradeServices {
+    private static ArrayList<Stock> stocks;
 
     @Override
-    public void calculateDividendYield(ArrayList<Stock> stocks) { }
-
-    @Override
-    public void calculatePERatio(ArrayList<Stock> stocks) { }
-
-    @Override
-    public void recordTrade(ArrayList<Stock> stocks) {
+    public void recordTrade() {
+        stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB
         Trade trade;
         String indicator;
         System.out.println("\nStock Symbol\t Timestamp\t\t Shares\t\t Buy/Sell\t\t Price");
         for(Stock stock : stocks) {
             if(stock != null) {
                 trade = new Trade();
+                trade.setTimestamp(LocalTime.now());
                 trade.setSharesQuantity((int)(Math.random() * 1000 + 1));
                 trade.setPrice(Math.random() * 20 + 1);
                 indicator = (int)(Math.random() * 2) == 0 ? Trade.indicator.buy.toString() : Trade.indicator.sell.toString();
-                System.out.println("\t" + stock.getStockSymbol() + "\t\t\t" + LocalTime.now() + "\t   " + trade.getSharesQuantity() +
+                System.out.println("\t" + stock.getStockSymbol() + "\t\t\t" + trade.getTimestamp() + "\t   " + trade
+                        .getSharesQuantity
+                        () +
                         "\t\t\t" + indicator + "\t\t\t" + new DecimalFormat("#.##").format(trade.getPrice()));
                 stock.setTrades(trade);
                 for(int i = 1; i < 15; i++) {
@@ -37,11 +36,12 @@ public class TradeService implements SimpleStockServices {
                 }
             }
         }
-        calculateStockPrice(stocks);
+        StaticDatabase.setStocksDB(stocks); //update Database after inserting ticker prices
     }
 
     @Override
-    public void calculateStockPrice(ArrayList<Stock> stocks) {
+    public void calculateStockPrice() {
+        stocks = StaticDatabase.getStocksDB();
         double sumTradePrices = 0;
         double sumQuantity = 0;
         double stockPrice;
@@ -55,11 +55,11 @@ public class TradeService implements SimpleStockServices {
             System.out.println("\t" + stock.getStockSymbol() + "\t\t\t   " +
                     new DecimalFormat("#.##").format(stockPrice));
         }
-        calculateGBCE(stocks);
     }
 
     @Override
-    public void calculateGBCE(ArrayList<Stock> stocks) {
+    public void calculateGBCE() {
+        stocks = StaticDatabase.getStocksDB();
         double productTradePrices = 1;
         double geoMean;
         int count = 0;
