@@ -12,17 +12,19 @@ public class SimpleStockService implements StockServices {
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static ArrayList<Stock> stocks;
 
-    public static void askForTickerPrice() throws IOException {
+    public static void loadDatabase() {
         StaticDatabase.createDatabase();
-        stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB
+    }
 
+    public static void askForTickerPrice() throws IOException {
+        stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB
         for (Stock stock : stocks) {
             try {
                 System.out.println("\nStock Symbol " + stock.getStockSymbol() + ": ");
                 System.out.print("Enter the ticker price: ");
                 stock.setTickerPrice(Double.parseDouble(br.readLine()));
             } catch (NumberFormatException e) {
-                throw new WrongFormatInput("You entered a String in stead of an integer, please start again!");
+                throw new WrongFormatInput("You entered a String in stead of an integer, please run the program again!");
             } catch (IOException e) {
                 e.printStackTrace();
             }

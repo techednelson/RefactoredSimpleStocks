@@ -22,11 +22,12 @@ public class SimpleTradeService implements TradeServices {
                 trade.setTimestamp(LocalTime.now());
                 trade.setSharesQuantity((int)(Math.random() * 1000 + 1));
                 trade.setPrice(Math.random() * 20 + 1);
-                indicator = (int)(Math.random() * 2) == 0 ? Trade.indicator.buy.toString() : Trade.indicator.sell.toString();
+                indicator = (int)(Math.random() * 2) == 0 ? Trade.indicator.sell.toString() : Trade.indicator.buy.toString();
+                indicator.trim();
                 System.out.println("\t" + stock.getStockSymbol() + "\t\t\t" + trade.getTimestamp() + "\t   " + trade
                         .getSharesQuantity
                         () +
-                        "\t\t\t" + indicator + "\t\t\t" + new DecimalFormat("#.##").format(trade.getPrice()));
+                        "\t\t   " + indicator + "\t\t\t " + new DecimalFormat("#.##").format(trade.getPrice()));
                 stock.setTrades(trade);
                 for(int i = 1; i < 15; i++) {
                     trade = new Trade();

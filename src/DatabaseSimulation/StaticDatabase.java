@@ -24,7 +24,7 @@ public class StaticDatabase {
         Stock Joe = new Stock("Joe", "Common", 13, 0, 250);
         stocksDB.add(Joe);
 
-        System.out.println("Stock Symbol     Type     Last Dividend     Fixed Dividend     Par Value\n");
+        System.out.println("\nStock Symbol     Type     Last Dividend     Fixed Dividend     Par Value\n");
         for (Stock stock : stocksDB) {
             if(stock.getLastDividend() > 9) {
                 System.out.println("\t" + stock.getStockSymbol() + "         " + stock.getType() + "           " + stock

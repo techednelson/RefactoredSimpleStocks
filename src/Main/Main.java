@@ -10,23 +10,25 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         boolean exit = false;
+        SimpleStockService.loadDatabase();
         while (!exit) {
             printMenu();
             int option;
             try {
                 option = Integer.parseInt(br.readLine());
             } catch (NumberFormatException e) {
-                throw new WrongFormatInput(" You have to enter an Integer. Please start again.");
+                throw new WrongFormatInput(" You have to enter an Integer. Please run the program again again.");
             }
-            SimpleStockService.askForTickerPrice();
             if (option != 0) {
                 switch (option) {
                     case 1:
+                        SimpleStockService.askForTickerPrice();
                         SimpleStockService stockService = new SimpleStockService();
                         stockService.calculateDividendYield();
                         stockService.calculatePERatio();
                         break;
                     case 2:
+                        SimpleStockService.askForTickerPrice();
                         SimpleTradeService tradeService = new SimpleTradeService();
                         tradeService.recordTrade();
                         tradeService.calculateStockPrice();
