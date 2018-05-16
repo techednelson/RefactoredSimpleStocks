@@ -1,6 +1,6 @@
 package Interfaces;
 
-import DatabaseSimulation.StaticDatabase;
+import DatabaseSimulation.SuperSimpleStockDB;
 import Model.*;
 
 import java.text.DecimalFormat;
@@ -12,7 +12,7 @@ public class SimpleTradeService implements TradeServices {
 
     @Override
     public void recordTrade() {
-        stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB
+        stocks = SuperSimpleStockDB.getStocksDB(); //get current stocks with their current values from DB
         Trade trade;
         String indicator;
         System.out.println("\nStock Symbol\t Timestamp\t\t Shares\t\t Buy/Sell\t\t Price");
@@ -37,12 +37,12 @@ public class SimpleTradeService implements TradeServices {
                 }
             }
         }
-        StaticDatabase.setStocksDB(stocks); //update Database after inserting ticker prices
+        SuperSimpleStockDB.setStocksDB(stocks); //update Database after inserting ticker prices
     }
 
     @Override
     public void calculateStockPrice() {
-        stocks = StaticDatabase.getStocksDB();
+        stocks = SuperSimpleStockDB.getStocksDB();
         double sumTradePrices = 0;
         double sumQuantity = 0;
         double stockPrice;
@@ -60,7 +60,7 @@ public class SimpleTradeService implements TradeServices {
 
     @Override
     public void calculateGBCE() {
-        stocks = StaticDatabase.getStocksDB();
+        stocks = SuperSimpleStockDB.getStocksDB();
         double productTradePrices = 1;
         double geoMean;
         int count = 0;

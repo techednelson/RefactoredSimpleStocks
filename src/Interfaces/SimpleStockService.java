@@ -1,6 +1,6 @@
 package Interfaces;
 
-import DatabaseSimulation.StaticDatabase;
+import DatabaseSimulation.SuperSimpleStockDB;
 import Exception.WrongFormatInput;
 import Model.Stock;
 
@@ -13,11 +13,12 @@ public class SimpleStockService implements StockServices {
     private static ArrayList<Stock> stocks;
 
     public static void loadDatabase() {
-        StaticDatabase.createDatabase();
+        SuperSimpleStockDB connectDB = new SuperSimpleStockDB();
+        if(connectDB.open()) connectDB.retrieveDatabase();
     }
 
     public static void askForTickerPrice() throws IOException {
-        stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB
+        stocks = SuperSimpleStockDB.getStocksDB(); //get current stocks with their current values from DB
         for (Stock stock : stocks) {
             try {
                 System.out.println("\nStock Symbol " + stock.getStockSymbol() + ": ");
@@ -29,12 +30,12 @@ public class SimpleStockService implements StockServices {
                 e.printStackTrace();
             }
         }
-        StaticDatabase.setStocksDB(stocks); //update Database after inserting ticker prices
+        SuperSimpleStockDB.setStocksDB(stocks); //update Database after inserting ticker prices
     }
 
     @Override
     public void calculateDividendYield() {
-        stocks = StaticDatabase.getStocksDB();
+        stocks = SuperSimpleStockDB.getStocksDB();
         double dividendYield;
         System.out.println("\nStock Symbol\t Dividend Yield");
         for(Stock stock : stocks) {
@@ -65,7 +66,7 @@ public class SimpleStockService implements StockServices {
 
     @Override
     public void calculatePERatio() {
-        stocks = StaticDatabase.getStocksDB();
+        stocks = SuperSimpleStockDB.getStocksDB();
         double peRatio;
         System.out.println("\nStock Symbol\t P/E Ratio");
         for(Stock stock : stocks) {
