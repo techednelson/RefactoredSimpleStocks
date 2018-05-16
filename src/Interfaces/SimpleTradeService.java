@@ -29,6 +29,7 @@ public class SimpleTradeService implements TradeServices {
                         () +
                         "\t\t   " + indicator + "\t\t\t " + new DecimalFormat("#.##").format(trade.getPrice()));
                 stock.setTrades(trade);
+                //each increment simulates a minutes until achieve the 15 minutes
                 for(int i = 1; i < 15; i++) {
                     trade = new Trade();
                     trade.setSharesQuantity((int)(Math.random() * 1000 + 1));
@@ -48,9 +49,10 @@ public class SimpleTradeService implements TradeServices {
         double stockPrice;
         System.out.println("\nStock Symbol\t Stock Price");
         for(Stock stock : stocks) {
+            // sum all the trade prices for the last 15 minutes calculated in the recordTrade method
             for(Trade trade : stock.getTrades()) {
                 sumTradePrices += trade.getPrice();
-                sumQuantity += trade.getSharesQuantity();;
+                sumQuantity += trade.getSharesQuantity();
             }
             stockPrice = (sumTradePrices * sumQuantity) / sumQuantity;
             System.out.println("\t" + stock.getStockSymbol() + "\t\t\t   " +
