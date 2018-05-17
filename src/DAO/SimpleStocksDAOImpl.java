@@ -9,7 +9,7 @@ public class SimpleStocksDAOImpl implements SimpleStocksDAO {
 
     private final String URL_DB = "jdbc:postgresql://localhost/SuperSimpleStockDB";
     private final String USER = "postgres";
-    private final String PASSWORD = "!@#321Nel";
+    private final String PASSWORD = "";
 
     private Connection conn;
 
