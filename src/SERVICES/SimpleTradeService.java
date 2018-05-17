@@ -1,6 +1,6 @@
-package Interfaces;
+package SERVICES;
 
-import DatabaseSimulation.SuperSimpleStockDB;
+import DAO.*;
 import Model.*;
 
 import java.text.DecimalFormat;
@@ -8,11 +8,12 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class SimpleTradeService implements TradeServices {
-    private static ArrayList<Stock> stocks;
+    private SimpleStocksDAO connectDB = new SimpleStocksDAOImpl();
+    private ArrayList<Stock> stocks;
 
     @Override
     public void recordTrade() {
-        stocks = SuperSimpleStockDB.getStocksDB(); //get current stocks with their current values from DB
+        stocks = connectDB.getStocksDB();//get current stocks with their current values from DB
         Trade trade;
         String indicator;
         System.out.println("\nStock Symbol\t Timestamp\t\t Shares\t\t Buy/Sell\t\t Price");
@@ -23,11 +24,10 @@ public class SimpleTradeService implements TradeServices {
                 trade.setSharesQuantity((int)(Math.random() * 1000 + 1));
                 trade.setPrice(Math.random() * 20 + 1);
                 indicator = (int)(Math.random() * 2) == 0 ? Trade.indicator.sell.toString() : Trade.indicator.buy.toString();
-                indicator.trim();
                 System.out.println("\t" + stock.getStockSymbol() + "\t\t\t" + trade.getTimestamp() + "\t   " + trade
                         .getSharesQuantity
                         () +
-                        "\t\t   " + indicator + "\t\t\t " + new DecimalFormat("#.##").format(trade.getPrice()));
+                        "\t\t   " + indicator.trim() + "\t\t\t " + new DecimalFormat("#.##").format(trade.getPrice()));
                 stock.setTrades(trade);
                 for(int i = 1; i < 15; i++) {
                     trade = new Trade();
@@ -37,12 +37,12 @@ public class SimpleTradeService implements TradeServices {
                 }
             }
         }
-        SuperSimpleStockDB.setStocksDB(stocks); //update Database after inserting ticker prices
+        connectDB.setStocksDB(stocks); //update Database after inserting ticker prices
     }
 
     @Override
     public void calculateStockPrice() {
-        stocks = SuperSimpleStockDB.getStocksDB();
+        stocks = connectDB.getStocksDB();
         double sumTradePrices = 0;
         double sumQuantity = 0;
         double stockPrice;
@@ -60,7 +60,7 @@ public class SimpleTradeService implements TradeServices {
 
     @Override
     public void calculateGBCE() {
-        stocks = SuperSimpleStockDB.getStocksDB();
+        stocks = connectDB.getStocksDB();
         double productTradePrices = 1;
         double geoMean;
         int count = 0;

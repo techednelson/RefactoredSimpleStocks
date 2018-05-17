@@ -1,16 +1,20 @@
 package Main;
 
 import Exception.WrongFormatInput;
-import Interfaces.*;
+import SERVICES.SimpleStockService;
+import SERVICES.SimpleTradeService;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) throws IOException {
+        SimpleStockService stockService = new SimpleStockService();
+        stockService.openDatabase();
         boolean exit = false;
-        SimpleStockService.loadDatabase();
         while (!exit) {
             printMenu();
             int option;
@@ -22,13 +26,12 @@ public class Main {
             if (option != 0) {
                 switch (option) {
                     case 1:
-                        SimpleStockService.askForTickerPrice();
-                        SimpleStockService stockService = new SimpleStockService();
+                        stockService.askForTickerPrice();
                         stockService.calculateDividendYield();
                         stockService.calculatePERatio();
                         break;
                     case 2:
-                        SimpleStockService.askForTickerPrice();
+                        stockService.askForTickerPrice();
                         SimpleTradeService tradeService = new SimpleTradeService();
                         tradeService.recordTrade();
                         tradeService.calculateStockPrice();
@@ -36,6 +39,7 @@ public class Main {
                         break;
                     case 3:
                         System.out.println("\nGoodbye! To play again, run the program");
+                        stockService.closeDatabase();
                         exit = true;
                         break;
                     default:

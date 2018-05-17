@@ -1,6 +1,6 @@
-package Interfaces;
+package SERVICES;
 
-import DatabaseSimulation.SuperSimpleStockDB;
+import DAO.*;
 import Exception.WrongFormatInput;
 import Model.Stock;
 
@@ -9,16 +9,21 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class SimpleStockService implements StockServices {
-    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private static ArrayList<Stock> stocks;
+    private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private SimpleStocksDAOImpl connectDB = new SimpleStocksDAOImpl();
+    private ArrayList<Stock> stocks;
 
-    public static void loadDatabase() {
-        SuperSimpleStockDB connectDB = new SuperSimpleStockDB();
-        if(connectDB.open()) connectDB.retrieveDatabase();
+    public void openDatabase() {
+        if(connectDB != null) {
+            connectDB.open();
+            connectDB.createDatabase();
+        }
     }
 
-    public static void askForTickerPrice() throws IOException {
-        stocks = SuperSimpleStockDB.getStocksDB(); //get current stocks with their current values from DB
+    public void closeDatabase() { connectDB.close(); }
+
+    public void askForTickerPrice() throws IOException {
+        stocks = connectDB.getStocksDB(); //get current stocks with their current values from DB
         for (Stock stock : stocks) {
             try {
                 System.out.println("\nStock Symbol " + stock.getStockSymbol() + ": ");
@@ -30,12 +35,12 @@ public class SimpleStockService implements StockServices {
                 e.printStackTrace();
             }
         }
-        SuperSimpleStockDB.setStocksDB(stocks); //update Database after inserting ticker prices
+        connectDB.setStocksDB(stocks); //update Database after inserting ticker prices
     }
 
     @Override
     public void calculateDividendYield() {
-        stocks = SuperSimpleStockDB.getStocksDB();
+        stocks = connectDB.getStocksDB();
         double dividendYield;
         System.out.println("\nStock Symbol\t Dividend Yield");
         for(Stock stock : stocks) {
@@ -66,7 +71,7 @@ public class SimpleStockService implements StockServices {
 
     @Override
     public void calculatePERatio() {
-        stocks = SuperSimpleStockDB.getStocksDB();
+        stocks = connectDB.getStocksDB();
         double peRatio;
         System.out.println("\nStock Symbol\t P/E Ratio");
         for(Stock stock : stocks) {
