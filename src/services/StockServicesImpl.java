@@ -17,32 +17,30 @@ public class StockServicesImpl implements StockServices {
 
     public static void printDatabase() { StaticDatabase.printDatabase(); }
 
-    public static void askForTickerPrice() {
-        stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB
+    public static void askForTickerPrice(String stockSymbol) {
+        stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB at database package
         for (Stock stock : stocks) {
-            try {
+            if(stock.getStockSymbol().equals(stockSymbol)) {
                 System.out.println("\nStock Symbol " + stock.getStockSymbol() + ": ");
                 System.out.print("Enter the ticker price: ");
-                stock.setTickerPrice(Double.parseDouble(br.readLine()));
-            } catch (NumberFormatException e) {
-                System.out.println("You entered a String in stead of an integer, try again!");
-                continue;
-            } catch (IOException e) {
-                System.out.println("You entered a String in stead of an integer, try again!");
-                continue;
-
+                try {
+                    stock.setTickerPrice(Double.parseDouble(br.readLine()));
+                } catch (IOException e) {
+                    continue;
+                }
+                break;
             }
         }
         StaticDatabase.setStocksDB(stocks); //update Database after inserting ticker prices
     }
 
     @Override
-    public void calculateDividendYield() {
-        stocks = StaticDatabase.getStocksDB();
+    public void calculateDividendYield(String stockSymbol) {
+        stocks = StaticDatabase.getStocksDB();//get current stocks with their current values from DB at database package
         double dividendYield;
         System.out.println("\nStock Symbol\t Dividend Yield");
         for(Stock stock : stocks) {
-            if(stock != null) {
+            if(stock != null && stock.getStockSymbol().equals(stockSymbol)) {
                 switch(stock.getType()) {
                     case "Preferred":
                         if(stock.getFixedDividend() != 0) {
@@ -63,20 +61,22 @@ public class StockServicesImpl implements StockServices {
                         }
                         break;
                 }
+                break;
             }
         }
     }
 
     @Override
-    public void calculatePERatio() {
-        stocks = StaticDatabase.getStocksDB();
+    public void calculatePERatio(String stockSymbol) {
+        stocks = StaticDatabase.getStocksDB();//get current stocks with their current values from DB at database package
         double peRatio;
         System.out.println("\nStock Symbol\t P/E Ratio");
         for(Stock stock : stocks) {
-            if(stock != null) {
+            if(stock != null && stock.getStockSymbol().equals(stockSymbol)) {
                 peRatio = stock.getLastDividend() != 0 ? stock.getTickerPrice() / stock.getLastDividend() : 0;
                 System.out.println("\t" + stock.getStockSymbol() + "\t\t\t\t " +
                         new DecimalFormat("#.##").format(peRatio));
+                break;
             }
         }
     }

@@ -2,9 +2,9 @@ package services;
 
 public interface TradeServices {
 
-    void recordTrade();
+    void recordTrade(String stockSymbol);
 
-    void calculateStockPrice();
+    void calculateStockPrice(String stockSymbol);
 
     void calculateGBCE();
 

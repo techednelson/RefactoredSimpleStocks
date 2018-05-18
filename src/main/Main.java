@@ -31,7 +31,6 @@ public class Main {
                         doStockCalculation(stockSymbol , operation);
                         break;
                     case 2:
-                        StockServicesImpl.askForTickerPrice();
                         TradeServicesImpl tradeService = new TradeServicesImpl();
                         tradeService.calculateGBCE();
                         break;
@@ -115,23 +114,24 @@ public class Main {
         return stock;
     }
 
-    private static void doStockCalculation(String stock, int operation) {
+    private static void doStockCalculation(String stockSymbol , int operation) {
+        StockServicesImpl.askForTickerPrice(stockSymbol);
         boolean exit = false;
         StockServicesImpl stockService = new StockServicesImpl();
         TradeServicesImpl tradeService = new TradeServicesImpl();
         while(!exit) {
             switch(operation) {
                 case 1:
-                    stockService.calculateDividendYield(stock);
+                    stockService.calculateDividendYield(stockSymbol);
                     break;
                 case 2:
-                    stockService.calculatePERatio(stock);
+                    stockService.calculatePERatio(stockSymbol);
                     break;
                 case 3:
-                    tradeService.recordTrade(stock);
+                    tradeService.recordTrade(stockSymbol);
                     break;
                 case 4:
-                    tradeService.calculateStockPrice(stock);
+                    tradeService.calculateStockPrice(stockSymbol);
                     break;
                 case 5:
                     exit = true;

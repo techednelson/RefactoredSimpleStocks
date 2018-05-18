@@ -2,8 +2,8 @@ package services;
 
 public interface StockServices {
 
-    void calculateDividendYield();
+    void calculateDividendYield(String stockSymbol);
 
-    void calculatePERatio();
+    void calculatePERatio(String stockSymbol);
 
 }
