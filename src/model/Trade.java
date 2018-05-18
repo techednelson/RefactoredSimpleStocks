@@ -1,13 +1,15 @@
-package Model;
+package model;
 
 import java.time.LocalTime;
 
 public class Trade {
 
+    public enum Indicator { buy, sell }
+
     private double price;
     private LocalTime timestamp;
     private int sharesQuantity;
-    public enum indicator { buy, sell }
+    private Indicator indicator;
 
     public double getPrice() { return price; }
 
@@ -20,4 +22,8 @@ public class Trade {
     public int getSharesQuantity() { return sharesQuantity; }
 
     public void setSharesQuantity(int sharesQuantity) { this.sharesQuantity = sharesQuantity; }
+
+    public Indicator getIndicator() { return indicator; }
+
+    public void setIndicator(Indicator indicator) { this.indicator = indicator; }
 }

@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.util.ArrayList;
 
@@ -36,6 +36,8 @@ public class Stock {
 
     public void setTickerPrice(double tickerPrice) { this.tickerPrice = tickerPrice; }
 
-    public void setTrades(Trade trade) { this.trades.add(trade); }
+    public void setTrades(ArrayList<Trade> tradeList) { trades = tradeList; }
+
+    public void addTrade(Trade trade) { this.trades.add(trade); }
 
 }

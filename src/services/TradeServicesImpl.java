@@ -1,20 +1,19 @@
-package Interfaces;
+package services;
 
-import DatabaseSimulation.StaticDatabase;
-import Model.*;
+import database.StaticDatabase;
+import model.*;
 
 import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class SimpleTradeService implements TradeServices {
+public class TradeServicesImpl implements TradeServices {
     private static ArrayList<Stock> stocks;
 
     @Override
     public void recordTrade() {
         stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB
         Trade trade;
-        String indicator;
         System.out.println("\nStock Symbol\t Timestamp\t\t Shares\t\t Buy/Sell\t\t Price");
         for(Stock stock : stocks) {
             if(stock != null) {
@@ -22,19 +21,20 @@ public class SimpleTradeService implements TradeServices {
                 trade.setTimestamp(LocalTime.now());
                 trade.setSharesQuantity((int)(Math.random() * 1000 + 1));
                 trade.setPrice(Math.random() * 20 + 1);
-                indicator = (int)(Math.random() * 2) == 0 ? Trade.indicator.sell.toString() : Trade.indicator.buy.toString();
-                indicator.trim();
+                if((int)(Math.random() * 2) == 0) trade.setIndicator(Trade.Indicator.sell);
+                else trade.setIndicator(Trade.Indicator.buy);
                 System.out.println("\t" + stock.getStockSymbol() + "\t\t\t" + trade.getTimestamp() + "\t   " + trade
                         .getSharesQuantity
                         () +
-                        "\t\t   " + indicator + "\t\t\t " + new DecimalFormat("#.##").format(trade.getPrice()));
-                stock.setTrades(trade);
+                        "\t\t   " + trade.getIndicator().toString() + "\t\t\t " + new DecimalFormat("#.##").format(trade
+                        .getPrice()));
+                stock.addTrade(trade);
                 //each increment simulates a minutes until achieve the 15 minutes
                 for(int i = 1; i < 15; i++) {
                     trade = new Trade();
                     trade.setSharesQuantity((int)(Math.random() * 1000 + 1));
                     trade.setPrice(Math.random() * 20 + 1);
-                    stock.setTrades(trade);
+                    stock.addTrade(trade);
                 }
             }
         }

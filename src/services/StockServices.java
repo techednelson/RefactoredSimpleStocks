@@ -1,4 +1,4 @@
-package Interfaces;
+package services;
 
 public interface StockServices {
 

@@ -1,14 +1,13 @@
-package Interfaces;
+package services;
 
-import DatabaseSimulation.StaticDatabase;
-import Exception.WrongFormatInput;
-import Model.Stock;
+import database.StaticDatabase;
+import model.Stock;
 
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class SimpleStockService implements StockServices {
+public class StockServicesImpl implements StockServices {
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static ArrayList<Stock> stocks;
 
@@ -16,7 +15,9 @@ public class SimpleStockService implements StockServices {
         StaticDatabase.createDatabase();
     }
 
-    public static void askForTickerPrice() throws IOException {
+    public static void printDatabase() { StaticDatabase.printDatabase(); }
+
+    public static void askForTickerPrice() {
         stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB
         for (Stock stock : stocks) {
             try {
@@ -24,9 +25,12 @@ public class SimpleStockService implements StockServices {
                 System.out.print("Enter the ticker price: ");
                 stock.setTickerPrice(Double.parseDouble(br.readLine()));
             } catch (NumberFormatException e) {
-                throw new WrongFormatInput("You entered a String in stead of an integer, please run the program again!");
+                System.out.println("You entered a String in stead of an integer, try again!");
+                continue;
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("You entered a String in stead of an integer, try again!");
+                continue;
+
             }
         }
         StaticDatabase.setStocksDB(stocks); //update Database after inserting ticker prices
