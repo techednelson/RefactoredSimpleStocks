@@ -27,8 +27,7 @@ public class Main {
                 switch (option) {
                     case 1:
                         String stockSymbol = selectStock();
-                        int operation = selectOperation();
-                        doStockCalculation(stockSymbol , operation);
+                        doCompute(stockSymbol);
                         break;
                     case 2:
                         TradeServicesImpl tradeService = new TradeServicesImpl();
@@ -54,29 +53,8 @@ public class Main {
             System.out.println("3 - Exit \n");
     }
 
-    private static int selectOperation() {
-        System.out.println("Select a calculation to perform with the stock: \n");
-        System.out.println("1 - Calculate Dividend Yield.");
-        System.out.println("2 - P/E Ratio");
-        System.out.println("3 - Record a Trade.");
-        System.out.println("4 - Calculate Stock Price.");
-        System.out.println("5 - <== Back \n");
-        int number = 0;
-        boolean exit = false;
-        while (!exit) {
-            try {
-                number = Integer.parseInt(br.readLine());
-                if(number >= 1 && number <=5) exit = true;
-            } catch (IOException e) {
-                System.out.println("You must enter an Integer, try again");
-                continue;
-            }
-        }
-        return number;
-    }
-
-    private static String selectStock() {
-        System.out.println("\n Please select a stock.\n");
+    private static String selectStock() throws IOException {
+        System.out.println("\n Please select a stock typing a number from 1 to 5.\n");
         System.out.println("1. Tea");
         System.out.println("2. Pop");
         System.out.println("3. Ale");
@@ -88,7 +66,7 @@ public class Main {
         while (!exit) {
             try {
                 number = Integer.parseInt(br.readLine());
-            } catch (IOException e) {
+            } catch (NumberFormatException e) {
                 System.out.println("You must enter an Integer, try again");
                 continue;
             }
@@ -114,12 +92,29 @@ public class Main {
         return stock;
     }
 
-    private static void doStockCalculation(String stockSymbol , int operation) {
-        StockServicesImpl.askForTickerPrice(stockSymbol);
+    private static void printSubmenu() {
+        System.out.println("\nSelect a calculation to perform with the stock: \n");
+        System.out.println("1 - Calculate Dividend Yield.");
+        System.out.println("2 - P/E Ratio");
+        System.out.println("3 - Record a Trade.");
+        System.out.println("4 - Calculate Stock Price.");
+        System.out.println("5 - <== Back \n");
+    }
+
+    private static void doCompute(String stockSymbol) throws IOException {
         boolean exit = false;
+        int operation;
         StockServicesImpl stockService = new StockServicesImpl();
         TradeServicesImpl tradeService = new TradeServicesImpl();
+        StockServicesImpl.askForTickerPrice(stockSymbol);
         while(!exit) {
+            printSubmenu();
+            try {
+                operation = Integer.parseInt(br.readLine());
+            } catch (NumberFormatException e) {
+                System.out.println("You must enter an Integer, try again");
+                continue;
+            }
             switch(operation) {
                 case 1:
                     stockService.calculateDividendYield(stockSymbol);

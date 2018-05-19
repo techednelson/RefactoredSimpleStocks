@@ -12,7 +12,7 @@ public class StaticDatabase {
     public static ArrayList<Stock> getStocksDB() { return stocksDB; }
     public static void setStocksDB(ArrayList<Stock> stocksDB) { StaticDatabase.stocksDB = stocksDB; }
 
-    private static ArrayList<Trade> tradesDB = new ArrayList<>();
+    private static ArrayList<Trade> tradesDB = new ArrayList<>(); //After database is created tradesDB will have 25 trades for starting the app.
 
     /**
      * createStocks method will create the 5 stocks first and add to each stock an ArrayList that will create 5
@@ -20,9 +20,16 @@ public class StaticDatabase {
      */
     public static void createDatabase() {
         createStocks();
-        for(Stock stock : stocksDB) {
-            createTrades(); // 5 trades are created and add to tradesDB ArrayList
-            stock.setTrades(tradesDB); //tradeDB ArrayList is added to stock in turn
+        createTrades();
+        int count = 1;
+        for(int i = 0; i < 5; i++) {// 5 trades from tradesDB are add to each Stock ArrayList for trades
+            for(int j = count; j <= 25; j++) {
+                stocksDB.get(i).addTrade(tradesDB.get(j-1));
+                if(j % 5 == 0) {
+                    count += 5;
+                    break;
+                }
+            }
         }
     }
 
@@ -40,16 +47,15 @@ public class StaticDatabase {
     }
 
     /**
-     * createTrades Method will create 5 trades when is invoked and add to an ArrayList that will be passed to the
-     * stock handled in turn.
+     * createTrades Method will create 25 trades when is invoked and add to tradesDB ArrayList
      */
     private static void createTrades() {
-        for(int i = 0; i < 5; i++) {
+        for(int i=0; i < 25; i++) {
             Trade trade = new Trade();
             trade.setTimestamp(LocalTime.now());
-            trade.setSharesQuantity((int)(Math.random() * 1000 + 1));
+            trade.setSharesQuantity((int) (Math.random() * 1000 + 1));
             trade.setPrice(Math.random() * 20 + 1);
-            if((int)(Math.random() * 2) == 0) trade.setIndicator(Trade.Indicator.sell);
+            if ((int) (Math.random() * 2) == 0) trade.setIndicator(Trade.Indicator.sell);
             else trade.setIndicator(Trade.Indicator.buy);
             tradesDB.add(trade);
         }

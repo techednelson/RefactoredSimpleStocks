@@ -3,7 +3,9 @@ package services;
 import database.StaticDatabase;
 import model.Stock;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -17,16 +19,21 @@ public class StockServicesImpl implements StockServices {
 
     public static void printDatabase() { StaticDatabase.printDatabase(); }
 
-    public static void askForTickerPrice(String stockSymbol) {
+    public static void askForTickerPrice(String stockSymbol) throws IOException {
         stocks = StaticDatabase.getStocksDB(); //get current stocks with their current values from DB at database package
+        boolean exit = false;
         for (Stock stock : stocks) {
             if(stock.getStockSymbol().equals(stockSymbol)) {
-                System.out.println("\nStock Symbol " + stock.getStockSymbol() + ": ");
-                System.out.print("Enter the ticker price: ");
-                try {
-                    stock.setTickerPrice(Double.parseDouble(br.readLine()));
-                } catch (IOException e) {
-                    continue;
+                while (!exit) {
+                    System.out.println("\nStock Symbol " + stock.getStockSymbol() + ": ");
+                    System.out.print("Enter the ticker price: ");
+                    try {
+                        stock.setTickerPrice(Double.parseDouble(br.readLine()));
+                        exit = true;
+                    } catch (NumberFormatException e) {
+                        System.out.println("You must enter an Integer, try again");
+                        continue;
+                    }
                 }
                 break;
             }
@@ -40,7 +47,7 @@ public class StockServicesImpl implements StockServices {
         double dividendYield;
         System.out.println("\nStock Symbol\t Dividend Yield");
         for(Stock stock : stocks) {
-            if(stock != null && stock.getStockSymbol().equals(stockSymbol)) {
+            if(stock.getStockSymbol().equals(stockSymbol)) {
                 switch(stock.getType()) {
                     case "Preferred":
                         if(stock.getFixedDividend() != 0) {
@@ -52,7 +59,7 @@ public class StockServicesImpl implements StockServices {
                         }
                         break;
                     case "Common":
-                        if(stock.getFixedDividend() != 0) {
+                        if(stock.getTickerPrice() != 0) {
                             dividendYield = stock.getLastDividend() / stock.getTickerPrice();
                             System.out.println("\t" + stock.getStockSymbol() + "\t\t\t\t " +
                                     new DecimalFormat("#.##").format(dividendYield));
@@ -72,7 +79,7 @@ public class StockServicesImpl implements StockServices {
         double peRatio;
         System.out.println("\nStock Symbol\t P/E Ratio");
         for(Stock stock : stocks) {
-            if(stock != null && stock.getStockSymbol().equals(stockSymbol)) {
+            if(stock.getStockSymbol().equals(stockSymbol)) {
                 peRatio = stock.getLastDividend() != 0 ? stock.getTickerPrice() / stock.getLastDividend() : 0;
                 System.out.println("\t" + stock.getStockSymbol() + "\t\t\t\t " +
                         new DecimalFormat("#.##").format(peRatio));

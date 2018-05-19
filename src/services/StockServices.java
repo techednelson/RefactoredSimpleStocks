@@ -1,6 +1,6 @@
 package services;
 
-public interface StockServices {
+public interface StockServices  {
 
     void calculateDividendYield(String stockSymbol);
 
